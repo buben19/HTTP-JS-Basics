@@ -16,8 +16,323 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<h1>HTTP</h1>
+
+					<div style="text-align: left">
+						<a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">Hypertext Transfer Protocol</a>
+						<p>Used for data exchange between client and server</p>
+						<p>Text based</p>
+						<p>HTTP is <a href="https://en.wikipedia.org/wiki/Stateless_protocol">stateless</a></p>
+					</div>
+				</section>
+
+				<section>
+					<h2>HTTP methods</h2>
+					<ol>
+						<li class="fragment highlight-red grow" data-fragment-index="1">GET</li>
+						<li>HEAD</li>
+						<li class="fragment highlight-red grow" data-fragment-index="1">POST</li>
+						<li class="fragment highlight-blue grow" data-fragment-index="2">PUT</li>
+						<li class="fragment highlight-blue grow" data-fragment-index="2">DELETE</li>
+						<li>CONNECT</li>
+						<li>OPTIONS</li>
+						<li>TRACE</li>
+						<li class="fragment highlight-blue grow" data-fragment-index="2">PATCH</li>
+					</ol>
+				</section>
+
+				<section>
+					<section>
+						<h2>HTTP GET</h2>
+						<pre><code>https://www.google.com/search?q=http&sourceid=chrome&ie=UTF-8</code></pre>
+						<div style="text-align: left">
+							<ul>
+								<li>Most used</li>
+								<li>Request data in URL. - Not suitable for user login</li>
+							</ul>
+						</div>
+					</section>
+
+					<section>
+						<h2>Example</h2>
+						<h3>GET Request</h3>
+						<pre><code class="language-http" data-trim>
+							GET /search?q=http&sourceid=chrome&ie=UTF-8 HTTP/3
+							Host: www.google.com
+							User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0
+							Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+							Accept-Language: en-US,en;q=0.5
+							Accept-Encoding: gzip, deflate, br
+							Alt-Used: www.google.com
+							Connection: keep-alive
+							Cookie: CONSENT=YES+shp.gws-20211013-0-RC1.cs+FX+092; NID=511=cbd5YOZQPfj_embK6jnwkulhai2-fxK_sAtIejJIA0ssbp3hk3L9qwkBRa9QyEp7SAA4KgvUH6RU4FdC5fePxs2QuoCFxY-YVNaf6ueTb0zijRrvXektmzoraNXd9VcAGBHMXNOEzablqHy15Rw4Nthm5g7YMWSnOjyuZYjLEu4; 1P_JAR=2021-10-19-10; ANID=AHWqTUkuxXd9z8vMzXmcyxcAVYYV-QLdfgeSJ1bIKA3WdJyLxZ8ZCadgaV6esBO9
+							Upgrade-Insecure-Requests: 1
+							Sec-Fetch-Dest: document
+							Sec-Fetch-Mode: navigate
+							Sec-Fetch-Site: none
+							Sec-Fetch-User: ?1
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Example</h2>
+						<h3>GET Response</h3>
+						<pre><code class="language-http" data-trim>
+							HTTP/3 200 OK
+							content-type: text/html; charset=UTF-8
+							date: Tue, 19 Oct 2021 19:04:10 GMT
+							expires: -1
+							cache-control: private, max-age=0
+							strict-transport-security: max-age=31536000
+							content-encoding: br
+							server: gws
+							x-xss-protection: 0
+							x-frame-options: SAMEORIGIN
+							set-cookie: 1P_JAR=2021-10-19-19; expires=Thu, 18-Nov-2021 19:04:10 GMT; path=/; domain=.google.com; Secure; SameSite=none
+							alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000,h3-T051=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>HTTP POST</h2>
+						<div style="text-align: left">
+							<ul>
+								<li>Used for uploads and sending form data</li>
+								<li>Data in request payload</li>
+							</ul>
+						</div>
+					</section>
+
+					<section>
+						<h2>Example</h2>
+						<h3>POST Request</h3>
+						<pre><code class="language-http" data-trim>
+							POST /api/v1/login HTTP/1.1
+							Host: login.szn.cz
+							User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0
+							Accept: application/json;q=0.9,*/*;q=0.8
+							Accept-Language: en-US,en;q=0.5
+							Accept-Encoding: gzip, deflate, br
+							Content-type: application/json
+							Content-Length: 182
+							Origin: https://login.szn.cz
+							Connection: keep-alive
+
+							{"username":"user@seznam.cz","password":"myPassword","service":"homepage","return_url":"https://login.seznam.cz/loginDone?return_url=https%3A%2F%2Fwww.seznam.cz%2F&service=homepage"}
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Example</h2>
+						<h3>POST Response</h3>
+						<pre><code class="language-http" data-trim>
+							HTTP/1.1 400 BAD REQUEST
+							Server: nginx/1.18.0
+							Date: Tue, 19 Oct 2021 10:38:07 GMT
+							Content-Type: application/json
+							Content-Length: 63
+							Connection: keep-alive
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<h2>HTTP response codes</h2>
+					<pre><code data-trim>
+						1xx: hold on
+						2xx: here you go
+						3xx: go away
+						4xx: you fucked up
+						5xx: I fucked up
+					</code></pre>
+					<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status">Documentation</a>
+				</section>
+
+				<section class="center">
+					<h2 class="r-fit-text">JavaScript</h2>
+				</section>
+
+				<section>
+					<h2>&lt;script&gt; tag</h2>
+
+					<h3 style="text-align: left">Directly into script tag</h3>
+					<pre><code data-trim>
+						&lt;p id=&quot;demo&quot;&gt;&lt;/p&gt;
+						&lt;script&gt;
+							document.getElementById(&quot;demo&quot;).innerHTML = &quot;My First JavaScript&quot;;
+						&lt;/script&gt;
+					</code></pre>
+
+					<h3 style="text-align: left">Link external file</h3>
+					<pre><code data-trim>
+						&lt;script src=&quot;...&quot;/&gt;
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Output</h2>
+					<pre><code class="language-js" data-trim>
+						window.alert(&quot;Hello world&quot;);  // Show dialog with message
+						console.log(&quot;Hello world&quot;); // Show message in developer console
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Variable declarations</h2>
+					<pre><code class="language-js" data-trim>
+						var a = 1;
+						let _b = &quot;text&quot;;
+						const c4 = true;
+					</code></pre>
+					<div style="text-align: left">
+						<ul>
+							<li>Variable names can contain alphanumeric characters and underscores (<code>_</code>)</li>
+							<li>Can't start with number</li>
+						</ul>
+					</div>
+				</section>
+
+				<section>
+					<h2>Types</h2>
+					<pre><code class="language-js" data-trim>
+						var something = 1; // Holds integer
+						something = 3.14; // Now floating point number
+						something = &quot;text&quot;; // Re-typed to string
+						something = true; // Now is boolean
+						something = new Date(); // Type changed to date
+						something = NaN; // Not-a-number
+						something = null; // Means value is not present.
+						something = undefined; // Variable is deleted
+					</code></pre>
+					<div style="text-align: left">
+						<ul>
+							<li>JS is weakly typed language</li>
+							<li>Variables are dynamically typed</li>
+						</ul>
+					</div>
+				</section>
+
+				<section>
+					<h2>There are only few types</h2>
+					<pre><code class="language-js" data-trim>
+						var something = 1;
+						console.log(typeof something); // number
+					</code></pre>
+					<div style="text-align: left">
+						<ol>
+							<li>number</li>
+							<li>string</li>
+							<li>boolean</li>
+							<li>symbol</li>
+							<li>object</li>
+							<li>undefined</li>
+							<li>null</li>
+						</ol>
+					</div>
+				</section>
+
+				<section>
+					<h2>Values in programming</h2>
+					<img src="img/null.png">
+				</section>
+
+				<section>
+					<h2>Let's do some flow</h2>
+					<pre><code class="language-js" data-trim>
+						function main(someStuff) {
+						  console.log(someStuff);
+						}
+
+						main(); // undefined
+						main(1); // 1
+						main(true); // true
+
+						main(() => {});
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Conditions</h2>
+					<pre><code class="language-js" data-trim>
+						let myVar = true;
+						if (myVar) {
+						  console.log(&quot;hello&quot;);
+						}
+
+						myVar = &quot;text&quot;;
+						if (myVar) {
+						  console.log(&quot;hello&quot;);
+						}
+
+						myVar = 1;
+						if (myVar) {
+						  console.log(&quot;hello&quot;);
+						}
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Cycles</h2>
+					<pre><code class="language-js" data-trim>
+						for (let i = 0; i &lt; 10; i++) {
+						  console.log(i);
+						}
+
+						let j = 0;
+						while (j++ &lt; 9) {
+						  console.log(j);
+						}
+
+						let k = 0;
+						do {
+						  console.log(k);
+						} while (k++ &lt; 9);
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Something more complicated</h2>
+					<pre><code class="language-js">let object = {
+  width: 960, // object.width;
+  height: 700, // object.height;
+  array: [1, 2, 3, {1: 1, 2: 2, 3: 3}], // object.array[3][&quot;1&quot;];
+  inner: {
+    x: &quot;x&quot;, // object.inner.x;
+    y: &quot;y&quot; // object.inner.y;
+  },
+  callable: function () { // object.callable();
+    return null;
+  },
+  lambda: () =&gt; null // object.lambda();
+}
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Learn more</h2>
+					<a href="https://www.w3schools.com/js/default.asp">W3School JS Tutorial</a>
+				</section>
+
+				<section>
+					<h2>Fork bomb</h2>
+					<pre><code>
+function fork() {
+  const win = window.open();
+  const script = win.document.createElement(&quot;script&quot;);
+  script.innerHTML = fork + &quot;\n&quot; + &quot;fork();&quot;;
+  win.document.head.appendChild(script);
+  setTimeout(function() {
+    win.close();
+    fork();
+  }, 250)
+}
+
+fork();
+					</code></pre>
+				</section>
 			</div>
 		</div>
 
@@ -31,6 +346,7 @@
 			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
+				center: false,
 
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
