@@ -1,0 +1,252 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css">
+
+		<style>
+			.reveal h1,
+			.reveal h2,
+			.reveal h3,
+			.reveal h4,
+			.reveal h5,
+			.reveal h6 {
+				text-transform: none;
+			}
+		</style>
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section class="center">
+					<h2 class="r-fit-text">Asynchronous JS</h2>
+				</section>
+
+				<section>
+					<h2>HTTP server without threads</h2>
+					<pre><code class="language-js" data-trim>
+						while(true) {
+						  let client = accept();
+						  handleClient(client);
+						}
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Blocking vs. non-blocking</h2>
+					<div style="text-align: left">
+						<h3>Non-blocking calls</h3>
+						<ul>
+							<li>Execute algorithm</li>
+							<li>Call another non-blocking function</li>
+						</ul>
+						<h3>Blocking call</h3>
+						<ul>
+							<li>Disk I/O, Network I/O, Printer, Tape, ...</li>
+							<li>Synchronization calls</li>
+							<li>Call another blocking function</li>
+						</ul>
+					</div>
+				</section>
+
+				<section>
+					<h2>Blocking calls</h2>
+					<div style="text-align: left">
+						<p class="fragment">When program is blocked, CPU does nothing (better case)</p>
+						<p class="fragment">Or it may spike to 100% CPU utilization (spinlock - this really sucks)</p>
+						<p class="fragment">In either case, whole system seems unresponsive</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Threads</h2>
+					<pre><code class="language-js">while(true) {
+  let client = accept();
+  let client handler = new ClientHandler(client);
+  new Thread(clientHandler).start();
+}
+
+class ClientHandler {
+  constructor(client) {
+    this.client = client;
+  }
+
+  function run() { // handle single client
+  }
+}
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Threading advantages</h2>
+					<div style="text-align: left">
+						<p>Scheduling is handled by OS</p>
+						<p>Relatively easy to write code</p>
+						<p>Programmer doesn't have to be aware of blocking calls</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Threading disadvantages</h2>
+					<div style="text-align: left">
+						<p>Need to synchronize code</p>
+						<p>Race conditions are hell to debug</p>
+						<p>Race conditions can't be tested reliably</p>
+						<p>Each thread causes some overhead (CPU, RAM)</p>
+						<p>System can't handle thousands of threads</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Asynchronous code</h2>
+					<div style="text-align: left">
+						<p>Entire application is running in one thread</p>
+						<p>Blocking calls doesn't block anymore</p>
+						<p>Whenever CPU has to wait, <code>Promise</code> is used.</p>
+						<p><code>Promise</code> can be resolved (success) or rejected (error)</p>
+						<p>Asynchronous programming can lead to callback hell and stupid bugs</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Basic promise</h2>
+					<pre><code>readFile(&quot;/etc/passwd&quot;).then(result =&gt; {
+  console.log(&quot;File content: &quot; + result);
+}).catch(error =&gt; {
+  console.warn(&quot;Read file failed: &quot; + error);
+});
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Basic promise</h2>
+					<pre><code>let shouldResolve = true;
+let p = new Promise((resolve, reject) =&gt; {
+  if (shouldResolve) {
+    resolve(&quot;Success&quot;);
+  } else {
+    reject(&quot;Failed&quot;);
+  }
+});
+
+p.then(message =&gt; {
+  console.log(&quot;Then callback: &quot; + message);
+}).catch(message =&gt; {
+  console.log(&quot;Catch callback: &quot; + message);
+});
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Things can go wrong</h2>
+					<pre><code>readFile(&quot;/etc/passwd&quot;).then(result =&gt; {
+  updateDatabase().then(result =&gt; {
+    notifyOverNetwork().then(result =&gt; {
+      writeFile(&quot;/etc/passwd&quot;).then(result =&gt; {
+        console.log(&quot;Success&quot;);
+      }).catch(error =&gt; {
+        console.warn(&quot;Write file failed: &quot; + error);
+      });
+    }).catch(error =&gt; {
+      console.warn(&quot;Notify over network failed: &quot; + error);
+    });
+  }).catch(error =&gt; {
+    console.warn(&quot;Update database failed: &quot; + error);
+  });
+}).catch(error =&gt; {
+  console.warn(&quot;Read file failed: &quot; + error);
+});
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Syntactic sugar for our rescue</h2>
+					<pre><code>try {
+  await readFile(&quot;/etc/passwd&quot;);
+  await updateDatabase();
+  await notifyOverNetwork();
+  await writeFile(&quot;/etc/passwd&quot;);
+  console.log(&quot;Success&quot;);
+} catch (error) {
+  console.warn(&quot;Failed: &quot; + error);
+}
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>async await</h2>
+					<pre><code>async function doAsynchronously() {
+  return new Promise((resolve, reject) =&gt; {
+    resolve(&quot;Success&quot;);
+  })
+}
+
+let result = await doAsynchronously();
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Asynchronous code advantages</h2>
+					<div style="text-align: left">
+						<p>Programmer has full control of tasks execution</p>
+						<p>No need to synchronize code</p>
+						<p>Minimal CPU and RAM overhead</p>
+						<p>Application can handle LOTS of tasks simultaneously (impossible with threads)</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Asynchronous code disadvantages</h2>
+					<div style="text-align: left">
+						<p>Programmer must be aware of async functions</p>
+						<p>Application is running in one thread - can utilize ony one CPU core</p>
+						<p>For load distribution some distributed architecture must be used</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>First practical use</h2>
+					<pre><code>async function getResponse() {
+  let response = await fetch(&quot;https://api.chucknorris.io/jokes/random&quot;);
+  if (response.ok) {
+    return await response.json();
+  } else {
+    return &quot;Response not ok&quot;;
+  }
+}
+
+getResponse().then(message =&gt; {
+  console.log(message.value);
+});
+					</code></pre>
+				</section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				center: false,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
