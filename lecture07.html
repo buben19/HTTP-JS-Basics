@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css">
+
+		<style>
+			.reveal h1,
+			.reveal h2,
+			.reveal h3,
+			.reveal h4,
+			.reveal h5,
+			.reveal h6 {
+				text-transform: none;
+			}
+		</style>
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section class="center">
+					<h2 class="r-fit-text">String</h2>
+				</section>
+
+				<section>
+					<h2>String</h2>
+					<div style="text-align: left">
+						<p>Data type for holding text</p>
+						<p>Should be (and is) <strong>immutable</strong></p>
+						<p>Basically, just sequence of characters</p>
+						<p>JS String has also some methods for common operations</p>
+						<p>JS supports <a href="https://en.wikipedia.org/wiki/Regular_expression">regular expressions</a> (regex)</p>
+					</div>
+				</section>
+
+				<section>
+					<section>
+						<h2>Immutable object</h2>
+						<div style="text-align: left;">
+							<p>Once initialized, data can't be altered</p>
+							<p>Its best practise, that object which represents data container is immutable</p>
+							<p>Package design pattern</p>
+							<p>There are some exceptions</p>
+						</div>
+					</section>
+
+					<section>
+						<h2>Immutable object</h2>
+						<pre><code class="language-js">let s = &quot;Hello world&quot;;
+console.log(s.toUpperCase()); // &quot;HELLO WORLD&quot;
+console.log(s); // Hello world</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<h2>String creation</h2>
+					<pre><code class="language-js">let s1 = &quot;Lorem ipsum dolor sit amet&quot;;
+let s2 = 'Lorem ipsum dolor sit amet';
+let s3 = `Lorem ipsum dolor sit amet`;
+let s4 = new String(&quot;Lorem ipsum dolor sit amet&quot;);</code></pre>
+				</section>
+
+				<section>
+					<section>
+						<h2>String object vs primitives</h2>
+						<pre><code class="language-js">let s1 = &quot;Hello world&quot;;
+let s2 = &quot;Hello world&quot;;
+s1 === s2; // true
+
+let s3 = new String(&quot;Hello world&quot;);
+let s4 = new String(&quot;Hello world&quot;);
+s3 === s4; // false</code></pre>
+					</section>
+
+					<section>
+						<h2>String object vs primitives</h2>
+						<pre><code class="language-js">let s1 = &quot;Hello world&quot;;
+typeof s1; // &quot;string&quot;
+
+let s2 = new String(&quot;Hello world&quot;);
+typeof s2; // &quot;object&quot;
+
+let s3 = s2.toString();
+typeof s3; // &quot;string&quot;</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<h2>Long Strings</h2>
+					<pre><code class="language-js">let s1 = &quot;Lorem ipsum &quot; +
+  &quot;dolor sit amet&quot;;
+
+let s2 &quot;Lorem ipsum \
+dolor sit amet&quot;</code></pre>
+				</section>
+
+				<section>
+					<section>
+						<h2>Escape sequences</h2>
+						<table>
+							<thead>
+							<tr>
+								<th>Escape sequence</th>
+								<th>Unicode code point</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td><code>\'</code></td>
+								<td>single quote</td>
+							</tr>
+							<tr>
+								<td><code>\"</code></td>
+								<td>double quote</td>
+							</tr>
+							<tr>
+								<td><code>\\</code></td>
+								<td>backslash</td>
+							</tr>
+							<tr>
+								<td><code>\t</code></td>
+								<td>tab</td>
+							</tr>
+							<tr>
+								<td><code>\b</code></td>
+								<td>backspace</td>
+							</tr>
+							<tr>
+								<td><code>\uXXXX</code></td>
+								<td>Unicode code</td>
+							</tr>
+							</tbody>
+						</table>
+					</section>
+					<section>
+						<h2>Escape sequences</h2>
+						<pre><code class="language-js">let s1 = &quot;Say \&quot;Hello\&quot;&quot;;
+let s2 = 'Say &quot;Hello&quot;';</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<h2>Concatenation</h2>
+					<pre><code class="language-js">let s1 = &quot;Hello&quot; + &quot; world&quot;;
+let s2 = &quot;Hello&quot;.concat(&quot; world&quot;);
+
+let s3 = &quot;Hello&quot;;
+s3 += &quot; world&quot;;</code></pre>
+				</section>
+
+				<section>
+					<h2>String formatting?</h2>
+					<pre><code class="language-js">let count = 5;
+let s1 = count + &quot; apples&quot;; // &quot;5 apples&quot;
+let s2 = `${count} apples`; // &quot;5 apples&quot;</code></pre>
+				</section>
+
+				<section>
+					<h2>String operations</h2>
+					<pre><code class="language-js">let s = &quot;Lorem ipsum dolor sit amet&quot;;
+s.length; // 26
+s.toUpperCase(); // &quot;LOREM IPSUM DOLOR SIT AMET&quot;
+s.substring(5); // &quot; ipsum dolor sit amet&quot;
+s.substring(0, 5); // &quot;Lorem&quot;
+s.replace(&quot;o&quot;, &quot;a&quot;); // &quot;Larem ipsum dolor sit amet&quot;
+s.replaceAll(&quot;o&quot;, &quot;a&quot;); // &quot;Larem ipsum dalar sit amet&quot;
+s.startsWith(&quot;Lorem&quot;); // true
+s.endsWith(&quot;amet&quot;); // true
+s.split(&quot; &quot;); // [&quot;Lorem&quot;, &quot;ipsum&quot;, &quot;dolor&quot;, &quot;sit&quot;, &quot;amet&quot;]
+s.charAt(0); // &quot;L&quot;
+s[0]; // &quot;L&quot;</code></pre>
+				</section>
+
+				<section>
+					<h2>Convert to other data types</h2>
+					<pre><code class="language-js">Number.parseInt(&quot;1&quot;); // 1
+Number.parseInt(&quot;3.14&quot;); // 3
+Number.parseFloat(&quot;3.14&quot;); // 3.14
++&quot;3.14&quot;; // 3.14</code></pre>
+				</section>
+
+				<section>
+					<section>
+						<h2>Evaluation</h2>
+						<div style="text-align: left">
+							<p>Parse string content into JS code</p>
+							<p>Call <code>eval()</code> function</p>
+							<p>Can lead to security risk</p>
+							<p>Fortunately, blocked in browsers by default</p>
+						</div>
+					</section>
+
+					<section>
+						<h2>Evaluation</h2>
+						<pre><code class="language-js">let s "window.close()";
+eval(s); // error</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<h2>JSON.parse()</h2>
+					<pre><code class="language-js">let s = &quot;{\&quot;color\&quot;: \&quot;red\&quot;, \&quot;seats\&quot;: 2}&quot;;
+let obj = JSON.parse(s);</code></pre>
+				</section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				center: false,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
