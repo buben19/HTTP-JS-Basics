@@ -1,0 +1,230 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css">
+
+		<style>
+			.reveal h1,
+			.reveal h2,
+			.reveal h3,
+			.reveal h4,
+			.reveal h5,
+			.reveal h6 {
+				text-transform: none;
+			}
+		</style>
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section class="center">
+					<h2 class="r-fit-text">Passwords</h2>
+				</section>
+
+				<section>
+					<h2>Concepts</h2>
+					<div style="text-align: left">
+						<p>There is <a href="https://en.wikipedia.org/wiki/AAA_(computer_security)">AAA</a> concept (Authentication, Authorization, Accounting).</p>
+						<p>User credentials are part of authentication.</p>
+						<p>Most common credentials are username:password</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Encryption</h2>
+					<div style="text-align: left">
+						<p>Encrypted data can be decrypted and vice versa</p>
+						<p>Symmetric and asymmetric</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Hash</h2>
+					<div style="text-align: left">
+						<p>There should be no inverse function for hashs.</p>
+						<p>Map arbitrary data for fixed size value</p>
+						<p>Risk of hash collisions</p>
+						<p>MD5, SHA1, SHA256, SHA512</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Security through obscurity</h2>
+					<div style="text-align: left">
+						<p>Never use it</p>
+						<p>Keeping in secret how my security works</p>
+						<p>Easily hackable</p>
+					</div>
+				</section>
+
+				<section class="center">
+					<h2 class="r-fit-text">Auth in web</h2>
+				</section>
+
+				<section>
+					<section>
+						<h2>Basic</h2>
+						<img src="img/basic-auth.png">
+					</section>
+					
+					<section>
+						<h2>Basic</h2>
+						<div style="text-align: left">
+							<pre><code>GET /private/index.html HTTP/1.0
+Host: localhost
+Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+							</code></pre>
+						</div>
+					</section>
+
+					<section>
+						<h2>Basic</h2>
+						<div style="text-align: left">
+							<p>Username and password are <a href="https://en.wikipedia.org/wiki/Base64">Base64</a> encoded in each request</p>
+							<p>Easily decodable</p>
+							<p>Really not secure</p>
+							<p>Not supporting authorization</p>
+						</div>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Login forms</h2>
+						<div style="text-align: left">
+							<p>User is authenticated against web application</p>
+							<p>More modern way</p>
+							<p>Information about user is usually carried in <a href="https://en.wikipedia.org/wiki/HTTP_cookie">cookie</a></p>
+							<p>SessionIds, JWT</p>
+						</div>
+					</section>
+
+					<section>
+						<h2>Cookies</h2>
+
+						<pre><code>HTTP/1.0 200 OK
+Content-type: text/html
+Set-Cookie: theme=light
+Set-Cookie: sessionToken=abc123; Expires=Wed, 09 Jun 2021 10:18:14 GMT
+							</code></pre>
+
+						<pre><code>GET /spec.html HTTP/1.1
+Host: www.example.org
+Cookie: theme=light; sessionToken=abc123
+							</code></pre>
+					</section>
+
+					<section>
+						<h2>JWT</h2>
+						<div style="text-align: left">
+							<p><a href="https://jwt.io/">jwt.io</a></p>
+							<p>JSON Web Token</p>
+							<p>Modern way of authentication and authorization</p>
+							<p>Supported in most frameworks</p>
+						</div>
+					</section>
+
+					<section>
+						<h2>JWT</h2>
+						<pre><code>GET /spec.html HTTP/1.1
+Host: www.example.org
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+							</code></pre>
+					</section>
+
+					<section>
+						<h2>JWT</h2>
+						<img src="img/jwt.PNG">
+					</section>
+				</section>
+
+				<section>
+					<h2>Storing users</h2>
+					<div style="text-align: left">
+						<p>Users are commonly stored in database</p>
+						<pre><code>@Data
+public class User {
+  private String username;
+  private String password;
+  private String email;
+}
+						</code></pre>
+					</div>
+				</section>
+
+				<section>
+					<h2>How to manage passwords</h2>
+					<div style="text-align: left">
+						<p>Do not use plaintext</p>
+						<p>Save hashed passwords instead</p>
+						<p>Use salts</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>bcrypt</h2>
+					<div style="text-align: left">
+						<p>Widely used password hashing function</p>
+						<p>Based on Blowfish cipher</p>
+						<p>Uses salts</p>
+						<p>Adaptive - mitigates brute-force</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>User example</h2>
+					<pre><code>{
+  &quot;username&quot;: &quot;user1&quot;,
+  &quot;password&quot;: &quot;$2a$12$TB5rAIVNfyPcAfln.buEVe1XmKfKQ6xi5ch2OfypGVhEwBN0/GEMK&quot;,
+  &quot;email&quot;: &quot;user1@example.com&quot;
+}
+						</code></pre>
+				</section>
+
+				<section>
+					<h2>Password attacks</h2>
+					<div style="text-align: left">
+						<p>Brute-force - Time consuming</p>
+						<p>Dictionary - Very effective for weak passwords</p>
+						<p><a href="https://en.wikipedia.org/wiki/Rainbow_table">Rainbow tables</a> - Pre-calculated brute force. Cheaper for computational power, but expensive for storage.</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Can you crack it?</h2>
+					<div style="text-align: left">
+						<p>4-digit PIN</p>
+						<pre><code>$2a$10$Gnn0S2l8pnXA/eMk/6wIsuI2Kh5B7Pkc4241kFlE8hsn7RQDALpKW</code></pre>
+					</div>
+				</section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				center: false,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
