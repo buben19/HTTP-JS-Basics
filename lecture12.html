@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css">
+
+		<style>
+			.reveal h1,
+			.reveal h2,
+			.reveal h3,
+			.reveal h4,
+			.reveal h5,
+			.reveal h6 {
+				text-transform: none;
+			}
+		</style>
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section class="center">
+					<h2 class="r-fit-text">Containers</h2>
+				</section>
+
+				<section>
+					<h2>Virtualization</h2>
+					<div style="text-align: left">
+						<p>Virtual machine</p>
+						<p>Container</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>VMs</h2>
+					<div style="text-align: left">
+						<p>Hypervisors: VMware, VirtualBox, QEMU</p>
+						<p>Needs to allocate CPU, RAM, network, ...</p>
+						<p>Virtual machine is stateful</p>
+						<p>OS independent</p>
+						<p>Entire operating system is virtualized</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Containers</h2>
+					<div style="text-align: left">
+						<p>Containers engines: Docker, OpenShift</p>
+						<p>No need to allocate resources in advance</p>
+						<p>Can limit resources</p>
+						<p>Stateless</p>
+						<p>OS dependent</p>
+						<p>Single process in isolation</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>VMs vs Containers</h2>
+					<img src="img/vms-vs-containers.png">
+				</section>
+
+				<section>
+					<h2>Docker</h2>
+					<div style="text-align: left">
+						<p>dockerd - Docker daemon. Runs containers.</p>
+						<p>docker - Docker client. Provides command line interface.</p>
+						<p>Image consists of multiple layers. Each layer contains changes to previous one.</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Dockerfile</h2>
+					<div style="text-align: left">
+						<p>Single file describing how to build docker image</p>
+						<p>Each statement in Dockerfile results in one layer</p>
+						<p><a href="https://docs.docker.com/engine/reference/builder/">Dockerfile reference</a></p>
+						<p><a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/">Best practices for writing Dockerfiles</a></p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Docker Hub</h2>
+					<div style="text-align: left">
+						<p><a href="https://hub.docker.com/">hub.docker.com</a></p>
+						<p>Catalog of docker images</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Start single container</h2>
+					<div style="text-align: left">
+						<pre><code>docker run -p 27017:27017 mongo</code></pre>
+					</div>
+				</section>
+
+				<section>
+					<h2>Docker Compose</h2>
+					<div style="text-align: left">
+						<p>Starting Docker containers one-by-one is tedious</p>
+						<p>Containers also needs to be linked to enable network communication</p>
+						<p>docker-compose to our rescue</p>
+						<p>It uses <a href="https://yaml.org/">YAML</a> syntax</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Docker Compose</h2>
+					<div style="text-align: left">
+						<pre><code>version: "3"
+services:
+  zookeeper:
+    image: docker.io/bitnami/zookeeper:3.7
+    ports:
+      - "2181:2181"
+    volumes:
+      - "zookeeper_data:/bitnami"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  kafka:
+    image: docker.io/bitnami/kafka:3
+    ports:
+      - "9092:9092"
+    volumes:
+      - "kafka_data:/bitnami"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+    depends_on:
+      - zookeeper
+
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local
+</code></pre>
+					</div>
+				</section>
+
+				<section>
+					<h2>Start Docker Compose</h2>
+					<div style="text-align: left">
+						<pre><code># Our file is called docker-compose.yml
+docker-compose up
+
+# Something else
+docker-compose -f myfile.yml up
+</code></pre>
+					</div>
+				</section>
+
+				<section>
+					<h2>Databases</h2>
+					<div style="text-align: left">
+						<p>Very common practise is run DB in Docker for development</p>
+						<p>Relational DB (SQL): MySql, PostgreSQL, Oracle, MSSLQ, ...</p>
+						<p><a href="https://en.wikipedia.org/wiki/NoSQL">NoSQL</a>: MongoDB, ElasticSearch ...</p>
+					</div>
+				</section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				center: false,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
